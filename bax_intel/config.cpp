@@ -18,11 +18,11 @@ class CfgVehicles {
     class Module_F: Logic {
         class AttributesBase {
             class Default;
-            class Edit;					// Default edit box (i.e. text input field)
+            class Edit;
             class EditMulti5;
-            class Combo;				// Default combo box (i.e. drop-down menu)
-            class Checkbox;				// Default checkbox (returned value is Boolean)
-            class ModuleDescription;	// Module description
+            class Combo;
+            class Checkbox;
+            class ModuleDescription;
         };
 
         // Description base classes (for more information see below):
@@ -37,7 +37,7 @@ class CfgVehicles {
         icon = "a3\modules_f_curator\data\icondiary_ca.paa";
         category = "Intel";
 
-        function = "BAX_INTEL_fnc_addIntelInit";
+        function = "BAX_INTEL_fnc_initIntel";
         functionPriority = 2;
         isGlobal = 2;
         isTriggerActivated = 1;
@@ -67,7 +67,7 @@ class CfgVehicles {
 
             // class Description: EditMulti5 {
             class Description {
-                control = "EditcodeMulti5";
+                control = "EditMulti5";
                 displayName = "Intel Description";
                 property = "BAX_Module_Intel_Description";
                 expression = "_this setVariable ['%s',_value,true];";
@@ -78,20 +78,23 @@ class CfgVehicles {
             // class Targets: Combo {
             class IntelTargets: Combo {
                 displayName = "Give To";
-                tooltip = "Whether to give to the player who up the intel, the player's group, the player's side, or everyone.";
+                tooltip = "Whether to give to the player who picked up the intel, the player's group, the player's side, or everyone.";
                 property = "BAX_Module_Intel_IntelTargets";
                 defaultValue = 2;
                 typeName = "NUMBER";
                 class Values {
                     class Player      { name = "Player";         value = 0; };
                     class PlayerGroup { name = "Player's Group"; value = 1; };
-                    class PlayerSide  { name = "Player's Side";  value = 2; default = 1; };
-                    class West        { name = "Blufor";         value = 3; };
-                    class East        { name = "Opfor";          value = 4; };
-                    class Guer        { name = "Indfor";         value = 5; };
-                    class Civ         { name = "Civlian";        value = 6; };
-                    class Everyone    { name = "Everyone";       value = 7; };
+                    class PlayerSide  { name = "Player's Side";  value = 2; default = 1; }
+                    class Everyone    { name = "Everyone";       value = 3; };
                 };
+            };
+
+            class Notify: Checkbox {
+                displayName = "Notify Recievers";
+                tooltip = "Whether to notify anyone who recieves the intel. If the player doesn't have the subject that intel is assignd, the notification will read ""Intel is unreadable"".";
+                property = "BAX_Module_Intel_Notify";
+                defaultValue = "true";
             };
 
             class SubCategoryAction {
@@ -127,6 +130,57 @@ class CfgVehicles {
                 };
             };
 
+            class Force: Checkbox {
+                displayName = "Force-Give intel with bad subject";
+                tooltip = "If a player does not have the subject that the intel is placed under, create an intel category (""zen_modules_intel"") to give the player intel. Disabling this is ideal for one-side intel that can't be read by another side. If notify is checked, the notification will say ""Intel is unreadable""";
+                property = "BAX_Module_Intel_Force";
+                defaultValue = "true";
+            };
+
+            class SubCategoryPickup {
+                data = "AttributeSystemSubcategory";
+                control = "SubCategory";
+                displayName = "Pickup Settings";
+            };
+
+            class PickupBlufor: Checkbox {
+                displayName = "Blufor can pickup this intel";
+                tooltip = "Allow blufor to pickup this intel";
+                property = "BAX_Module_Pickup_Blufor";
+                defaultValue = "true";
+            };
+
+            class PickupOpfor: Checkbox {
+                displayName = "Opfor can pickup this intel";
+                tooltip = "Allow opfor to pickup this intel";
+                property = "BAX_Module_Pickup_Opfor";
+                defaultValue = "true";
+            };
+
+            class PickupIndfor: Checkbox {
+                displayName = "Indfor can pickup this intel";
+                tooltip = "Allow indfor to pickup this intel";
+                property = "BAX_Module_Pickup_Indfor";
+                defaultValue = "true";
+            };
+
+            class PickupCiv: Checkbox {
+                displayName = "Civilians can pickup this intel";
+                tooltip = "Allow civilians to pickup this intel";
+                property = "BAX_Module_Pickup_Civ";
+                defaultValue = "true";
+            };
+
+            class OnPickupCode {
+                control = "EditCodeMulti5";
+                displayName = "On Pickup";
+                property = "BAX_Module_Intel_OnPickupCode";
+                tooltip = "This function is called local to the player who picks up the intel. This function does not affect the behavior of the intel. It is called after intel is given, but before the action or object is deleted. Args: [_targetObject, _caller, _doDelete, [_intelTargetValue,_subject,_title,_description,_notify,_force]]";
+                expression = "_this setVariable ['%s',_value,true];";
+                typeName = "STRING";
+                defaultValue = "";
+            };
+
             class ModuleDescription: ModuleDescription {};
         };
 
@@ -135,13 +189,13 @@ class CfgVehicles {
         };
     };
 
-    class BAX_Module_AddIntelActionAce: Module_F {
+    class BAX_Module_AddAceIntelAction: Module_F {
         scope = 2;
         displayName = "[BAX] Add Ace Intel Action";
         icon = "a3\modules_f_curator\data\icondiary_ca.paa";
         category = "Intel";
 
-        function = "BAX_INTEL_fnc_addIntelInitAce";
+        function = "BAX_INTEL_fnc_initAceIntel";
         functionPriority = 2;
         isGlobal = 2;
         isTriggerActivated = 1;
@@ -168,9 +222,8 @@ class CfgVehicles {
                 };
             };
 
-            // class Description: EditMulti5 {
             class Content {
-                control = "EditcodeMulti5";
+                control = "EditMulti5";
                 displayName = "Intel Content";
                 property = "BAX_Module_Intel_Content";
                 tooltip = "For the photo intel type, content needs to be a filepath to an image.";
@@ -184,17 +237,20 @@ class CfgVehicles {
                 tooltip = "Whether to give to the player who up the intel, the player's group, the player's side, or everyone.";
                 property = "BAX_Module_Intel_IntelTargets";
                 defaultValue = 2;
-                typeName = "NUMEBR";
+                typeName = "NUMBER";
                 class Values {
                     class Player      { name = "Player";         value = 0; };
                     class PlayerGroup { name = "Player's Group"; value = 1; };
                     class PlayerSide  { name = "Player's Side";  value = 2; default = 1; };
-                    class West        { name = "Blufor";         value = 3; };
-                    class East        { name = "Opfor";          value = 4; };
-                    class Guer        { name = "Indfor";         value = 5; };
-                    class Civ         { name = "Civlian";        value = 6; };
-                    class Everyone    { name = "Everyone";       value = 7; };
+                    class Everyone    { name = "Everyone";       value = 3; };
                 };
+            };
+
+            class Notify: Checkbox {
+                displayName = "Notify Recievers";
+                tooltip = "Whether to notify anyone who recieves the intel.";
+                property = "BAX_Module_Intel_Notify";
+                defaultValue = "true";
             };
 
             class SubCategoryAction {
@@ -229,6 +285,50 @@ class CfgVehicles {
                     class Object  { name = "Object";  value = 2; default = 1; };
                 };
             };
+            
+            class SubCategoryPickupo {
+                data = "AttributeSystemSubcategory";
+                control = "SubCategory";
+                displayName = "Pickup Settings";
+            };
+
+            class PickupBlufor: Checkbox {
+                displayName = "Blufor can pickup this intel";
+                tooltip = "Allow blufor to pickup this intel";
+                property = "BAX_Module_Pickup_Blufor";
+                defaultValue = "true";
+            };
+
+            class PickupOpfor: Checkbox {
+                displayName = "Opfor can pickup this intel";
+                tooltip = "Allow opfor to pickup this intel";
+                property = "BAX_Module_Pickup_Opfor";
+                defaultValue = "true";
+            };
+
+            class PickupIndfor: Checkbox {
+                displayName = "Indfor can pickup this intel";
+                tooltip = "Allow indfor to pickup this intel";
+                property = "BAX_Module_Pickup_Indfor";
+                defaultValue = "true";
+            };
+
+            class PickupCiv: Checkbox {
+                displayName = "Civilians can pickup this intel";
+                tooltip = "Allow civilians to pickup this intel";
+                property = "BAX_Module_Pickup_Civ";
+                defaultValue = "true";
+            };
+
+            class OnPickupCode {
+                control = "EditCodeMulti5";
+                displayName = "On Pickup";
+                property = "BAX_Module_Intel_OnPickupCode";
+                tooltip = "This function is called local to the player who picks up the intel. This function does not affect the behavior of the intel. It is called after intel is given, but before the action or object is deleted. Args: [_targetObject, _caller, _doDelete, [_intelTargetValue,_aceIntelType,_intelContent,_notify]]";
+                expression = "_this setVariable ['%s',_value,true];";
+                typeName = "STRING";
+                defaultValue = "";
+            };
 
             class ModuleDescription: ModuleDescription {};
         };
@@ -244,7 +344,7 @@ class CfgVehicles {
         icon = "a3\modules_f_curator\data\icondiary_ca.paa";
         category = "Intel";
 
-        function = "BAX_INTEL_fnc_addDiarySubjectInit";
+        function = "BAX_INTEL_fnc_initDiarySubject";
         functionPriority = 1;
         isGlobal = 2;
         isTriggerActivated = 1;
@@ -266,6 +366,28 @@ class CfgVehicles {
                 defaultValue = "''";
             };
 
+            class Picture: Edit {
+                displayName = "Subject Picture";
+                tooltip = "Picture shown for the subject"
+                property = "BAX_Module_Intel_Picture";
+                defaultValue = "''";
+            };
+
+            class Targets: Combo {
+                displayName = "Give To";
+                tooltip = "Whether to give to the player who up the intel, the player's group, the player's side, or everyone.";
+                property = "BAX_Module_Intel_Targets";
+                defaultValue = 3;
+                typeName = "NUMBER";
+                class Values {
+                    class West        { name = "Blufor";         value = 3; default = 1; };
+                    class East        { name = "Opfor";          value = 4; };
+                    class Guer        { name = "Indfor";         value = 5; };
+                    class Civ         { name = "Civlian";        value = 6; };
+                    class Everyone    { name = "Everyone";       value = 7; };
+                };
+            };
+
             class ModuleDescription: ModuleDescription {};
         };
 
@@ -279,14 +401,14 @@ class CfgFunctions {
     class BAX_INTEL {
         class intel {
             file = "\bax_intel\functions";
-            class addDiarySubjectInit {};
             class addIntelAction {};
-            class addIntelActionAce {};
-            class addIntelInit {};
-            class addIntelInitAce {};
-            class giveIntelAce {};
+            class addAceIntelAction {};
+            class giveAceIntel {};
             class giveIntelClient {};
             class giveIntelServer {};
+            class initAceIntel {};
+            class initDiarySubject {};
+            class initIntel {};
         };
     };
 };
