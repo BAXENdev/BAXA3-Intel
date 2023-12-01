@@ -25,7 +25,6 @@ _action = [
             _fullIntelArgs remoteExec ["BAX_INTEL_fnc_giveAceIntel",2];
         };
 
-        diag_log "test";
         [_target,_caller,_delete,_intelArgs] call _onPickupCode;
 
         switch (_delete) do {
