@@ -104,7 +104,7 @@ class CfgVehicles {
             };
 
             class UseAceInteract: Checkbox {
-                displayName = "Use Ace Interect";
+                displayName = "Use Ace Interact";
                 tooltip = "Whether to use arma's addAction (scroll menu) or add ace interaction. If ace is loaded, module will fail without error.";
                 property = "BAX_Module_Intel_UseAceInteract";
                 defaultValue = "false";
@@ -260,7 +260,7 @@ class CfgVehicles {
             };
 
             class UseAceInteract: Checkbox {
-                displayName = "Use Ace Interect";
+                displayName = "Use Ace Interact";
                 tooltip = "Whether to use arma's addAction (scroll menu) or add ace interaction. If ace is loaded, module will fail without error.";
                 property = "BAX_Module_Intel_UseAceInteract";
                 defaultValue = "false";
