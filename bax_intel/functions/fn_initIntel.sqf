@@ -22,6 +22,13 @@ if (_activated) then {
     _force = _logic getVariable ["force",true];
     _onPickupCode = _logic getVariable ["onPickupCode",{}];
     if (_delete isEqualType "") then { _delete = parseNumber _delete; };
+    _force = _logic getVariable ["force",true];
+    _pickupBlufor = _logic getVariable ["pickupBlufor",true];
+    _pickupOpfor = _logic getVariable ["pickupOpfor",true];
+    _pickupIndfor = _logic getVariable ["pickupIndfor",true];
+    _pickupCiv = _logic getVariable ["pickupCiv",true];
+    _onPickupCode = _logic getVariable ["onPickupCode",{}];
+    if (_onPickupCode isEqualType "") then { _onPickupCode = compile _onPickupCode; };
 
     private ["_intelArgs","_objects"];
     _objects = synchronizedObjects _logic;

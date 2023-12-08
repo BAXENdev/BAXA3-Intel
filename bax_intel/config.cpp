@@ -85,12 +85,8 @@ class CfgVehicles {
                 class Values {
                     class Player      { name = "Player";         value = 0; };
                     class PlayerGroup { name = "Player's Group"; value = 1; };
-                    class PlayerSide  { name = "Player's Side";  value = 2; default = 1; };
-                    class West        { name = "Blufor";         value = 3; };
-                    class East        { name = "Opfor";          value = 4; };
-                    class Guer        { name = "Indfor";         value = 5; };
-                    class Civ         { name = "Civlian";        value = 6; };
-                    class Everyone    { name = "Everyone";       value = 7; };
+                    class PlayerSide  { name = "Player's Side";  value = 2; default = 1; }
+                    class Everyone    { name = "Everyone";       value = 3; };
                 };
             };
 
@@ -108,7 +104,7 @@ class CfgVehicles {
             };
 
             class UseAceInteract: Checkbox {
-                displayName = "Use Ace Interect";
+                displayName = "Use Ace Interact";
                 tooltip = "Whether to use arma's addAction (scroll menu) or add ace interaction. If ace is loaded, module will fail without error.";
                 property = "BAX_Module_Intel_UseAceInteract";
                 defaultValue = "false";
@@ -212,11 +208,7 @@ class CfgVehicles {
                     class Player      { name = "Player";         value = 0; };
                     class PlayerGroup { name = "Player's Group"; value = 1; };
                     class PlayerSide  { name = "Player's Side";  value = 2; default = 1; };
-                    class West        { name = "Blufor";         value = 3; };
-                    class East        { name = "Opfor";          value = 4; };
-                    class Guer        { name = "Indfor";         value = 5; };
-                    class Civ         { name = "Civlian";        value = 6; };
-                    class Everyone    { name = "Everyone";       value = 7; };
+                    class Everyone    { name = "Everyone";       value = 3; };
                 };
             };
 
@@ -234,7 +226,7 @@ class CfgVehicles {
             };
 
             class UseAceInteract: Checkbox {
-                displayName = "Use Ace Interect";
+                displayName = "Use Ace Interact";
                 tooltip = "Whether to use arma's addAction (scroll menu) or add ace interaction. If ace is loaded, module will fail without error.";
                 property = "BAX_Module_Intel_UseAceInteract";
                 defaultValue = "false";
@@ -258,6 +250,50 @@ class CfgVehicles {
                     class Action  { name = "Action";  value = 1; };
                     class Object  { name = "Object";  value = 2; default = 1; };
                 };
+            };
+            
+            class SubCategoryPickup {
+                data = "AttributeSystemSubcategory";
+                control = "SubCategory";
+                displayName = "Pickup Settings";
+            };
+
+            class PickupBlufor: Checkbox {
+                displayName = "Blufor can pickup this intel";
+                tooltip = "Allow blufor to pickup this intel";
+                property = "BAX_Module_Pickup_Blufor";
+                defaultValue = "true";
+            };
+
+            class PickupOpfor: Checkbox {
+                displayName = "Opfor can pickup this intel";
+                tooltip = "Allow opfor to pickup this intel";
+                property = "BAX_Module_Pickup_Opfor";
+                defaultValue = "true";
+            };
+
+            class PickupIndfor: Checkbox {
+                displayName = "Indfor can pickup this intel";
+                tooltip = "Allow indfor to pickup this intel";
+                property = "BAX_Module_Pickup_Indfor";
+                defaultValue = "true";
+            };
+
+            class PickupCiv: Checkbox {
+                displayName = "Civilians can pickup this intel";
+                tooltip = "Allow civilians to pickup this intel";
+                property = "BAX_Module_Pickup_Civ";
+                defaultValue = "true";
+            };
+
+            class OnPickupCode {
+                control = "EditCodeMulti5";
+                displayName = "On Pickup";
+                property = "BAX_Module_Intel_OnPickupCode";
+                tooltip = "This function is called local to the player who picks up the intel. This function does not affect the behavior of the intel. It is called after intel is given, but before the action or object is deleted. Args: [_targetObject, _caller, _doDelete, [_intelTargetValue,_aceIntelType,_intelContent,_notify]]";
+                expression = "_this setVariable ['%s',_value,true];";
+                typeName = "STRING";
+                defaultValue = "";
             };
 
             class OnPickupCode {
