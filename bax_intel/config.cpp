@@ -137,6 +137,40 @@ class CfgVehicles {
                 defaultValue = "true";
             };
 
+            class SubCategoryPickup {
+                data = "AttributeSystemSubcategory";
+                control = "SubCategory";
+                displayName = "Pickup Settings";
+            };
+
+            class PickupBlufor: Checkbox {
+                displayName = "Blufor can pickup this intel";
+                tooltip = "Allow blufor to pickup this intel";
+                property = "BAX_Module_Pickup_Blufor";
+                defaultValue = "true";
+            };
+
+            class PickupOpfor: Checkbox {
+                displayName = "Opfor can pickup this intel";
+                tooltip = "Allow opfor to pickup this intel";
+                property = "BAX_Module_Pickup_Opfor";
+                defaultValue = "true";
+            };
+
+            class PickupIndfor: Checkbox {
+                displayName = "Indfor can pickup this intel";
+                tooltip = "Allow indfor to pickup this intel";
+                property = "BAX_Module_Pickup_Indfor";
+                defaultValue = "true";
+            };
+
+            class PickupCiv: Checkbox {
+                displayName = "Civilians can pickup this intel";
+                tooltip = "Allow civilians to pickup this intel";
+                property = "BAX_Module_Pickup_Civ";
+                defaultValue = "true";
+            };
+
             class OnPickupCode {
                 control = "EditCodeMulti5";
                 displayName = "On Pickup";

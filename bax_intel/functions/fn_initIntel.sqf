@@ -35,13 +35,19 @@ if (_activated) then {
     if (_objects isEqualTo []) exitWith { true; };
     _intelArgs = [_intelTargetValue,_subject,_title,_description,_notify,_force];
 
+    _pickupArgs = [];
+    if (_pickupBlufor) then { _pickupArgs pushBack west; };
+    if (_pickupOpfor) then { _pickupArgs pushBack east; };
+    if (_pickupIndfor) then { _pickupArgs pushBack independent; };
+    if (_pickupCiv) then { _pickupArgs pushBack civilian; };
+
     if (_useAceInteract) then {
         _objects apply { 
-            [_x,_actionName,_delete,0,_onPickupCode,_intelArgs] call BAX_INTEL_fnc_addAceIntelAction; 
+            [_x,_actionName,_delete,0,_onPickupCode,_intelArgs,_pickupArgs] call BAX_INTEL_fnc_addAceIntelAction; 
         };
     } else {
         _objects apply { 
-            [_x,_actionName,_delete,0,_onPickupCode,_intelArgs] call BAX_INTEL_fnc_addIntelAction; 
+            [_x,_actionName,_delete,0,_onPickupCode,_intelArgs,_pickupArgs] call BAX_INTEL_fnc_addIntelAction; 
         };
     };
 };

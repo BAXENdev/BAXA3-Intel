@@ -1,5 +1,4 @@
 
-params ["_object","_actionName","_delete","_intelFunctionNumber","_onPickupCode","_intelArgs"];
 params ["_object","_actionName","_delete","_intelFunctionNumber","_onPickupCode","_intelArgs","_pickupTargets"];
 
 if (isNull (configFile >> "CfgPatches" >> "ace_interact_menu")) exitWith {
@@ -17,7 +16,6 @@ _action = [
 	"", //  Icon path
 	{
         params ["_target", "_caller", "_arguments"];
-        _arguments params ["_actionVarName","_delete","_intelFunctionNumber","_onPickupCode","_intelArgs"];
         _arguments params ["_actionVarName","_delete","_intelFunctionNumber","_onPickupCode","_actionId","_intelArgs"];
 
         _fullIntelArgs = [_caller] + _intelArgs;
@@ -48,7 +46,6 @@ _action = [
         (side group player) in _pickupTargets;
     }, // Condition code
 	{}, // Insert children code, Optional
-	[_actionVarName,_delete,_intelFunctionNumber,_onPickupCode,_intelArgs]
 	[_actionVarName,_delete,_intelFunctionNumber,_onPickupCode,_actionId,_intelArgs]
 ] call ace_interact_menu_fnc_createAction;
 

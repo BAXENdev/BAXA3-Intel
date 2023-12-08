@@ -1,7 +1,7 @@
 
-params ["_object","_actionName","_delete","_intelFunctionNumber","_onPickupCode","_intelArgs"];
+params ["_object","_actionName","_delete","_intelFunctionNumber","_onPickupCode","_intelArgs","_pickupTargets"];
 
-_object addAction
+_actionID = _object addAction
 [
     _actionName,
     {
@@ -15,7 +15,7 @@ _object addAction
             _fullIntelArgs remoteExec ["BAX_INTEL_fnc_giveAceIntel",2];
         };
 
-        [_target,_caller,_delete,_intelArgs] call compile _onPickupCode;
+        [_target,_caller,_delete,_intelArgs] call _onPickupCode;
 
         switch (_delete) do {
             case 1: { [_target,_actionId] remoteExec ["removeAction"]; };
@@ -27,9 +27,11 @@ _object addAction
     true,   // showWindow
     true,   // hideOnUse
     "",     // shortcut
-    "true", // condition
+    "(side group _this) in (_originalTarget getVariable [(""pickupTargets_action_"" + (str _actionId)),[west,east,independent,civilian]])", // condition
     5,      // radius
     false,  // unconscious
     "",     // selection
     ""      // memoryPoint
 ];
+
+_object setVariable [("pickupTargets_action_" + (str_actionID)),_pickupTargets];
