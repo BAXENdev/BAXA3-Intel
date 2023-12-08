@@ -1,5 +1,5 @@
 
-params ["_object","_actionName","_delete","_intelFunctionNumber","_intelArgs"];
+params ["_object","_actionName","_delete","_intelFunctionNumber","_onPickupCode","_intelArgs"];
 
 if (isNull (configFile >> "CfgPatches" >> "ace_interact_menu")) exitWith {
     diag_log "[BAX] Intel: ace_interact_menu is not loaded";
@@ -13,14 +13,16 @@ _action = [
 	"", //  Icon path
 	{
         params ["_target", "_caller", "_arguments"];
-        _arguments params ["_actionVarName","_delete","_intelFunctionNumber","_intelArgs"];
+        _arguments params ["_actionVarName","_delete","_intelFunctionNumber","_onPickupCode","_intelArgs"];
 
-        _intelArgs = [_caller] + _intelArgs;
+        _fullIntelArgs = [_caller] + _intelArgs;
         if (_intelFunctionNumber == 0) then {
-            _intelArgs remoteExec ["BAX_INTEL_fnc_giveIntelServer",2];
+            _fullIntelArgs remoteExec ["BAX_INTEL_fnc_giveIntelServer",2];
         } else {
-            _intelArgs remoteExec ["BAX_INTEL_fnc_giveIntelAce",2];
+            _fullIntelArgs remoteExec ["BAX_INTEL_fnc_giveAceIntel",2];
         };
+
+        [_target,_caller,_delete,_intelArgs] call _onPickupCode;
 
         switch (_delete) do {
             case 1: { 
@@ -35,7 +37,7 @@ _action = [
     }, // Action code. params ["_target","_player","_params"]
 	{ true }, // Condition code
 	{}, // Insert children code, Optional
-	[_actionVarName,_delete,_intelFunctionNumber,_intelArgs]
+	[_actionVarName,_delete,_intelFunctionNumber,_onPickupCode,_intelArgs]
 ] call ace_interact_menu_fnc_createAction;
 
 [

@@ -9,21 +9,23 @@ _activated = _this param [2,true,[true]];
 
 if (_activated) then {
 
-    private ["_intelType","_content","_intelTargetValue","_useAceInteract","_actionName","_delete"];
+    private ["_intelType","_content","_intelTargetValue","_useAceInteract","_actionName","_delete","_notify"];
     _intelType = _logic getVariable ["intelType", "acex_intelitems_document"];
     _content = _logic getVariable ["content", ""];
     _intelTargetValue = _logic getVariable ["intelTargets", 0];
     if (_intelTargetValue isEqualType "") then { _intelTargetValue = parseNumber _intelTargetValue; };
+    _notify = _logic getVariable ["useAceInteract", true];
     _useAceInteract = _logic getVariable ["useAceInteract", false];
     _actionName = _logic getVariable ["actionName", "Pickup Intel"];
     _delete = _logic getVariable ["delete", 2];
     if (_delete isEqualType "") then { _delete = parseNumber _delete; };
+    _onPickupCode = _logic getVariable ["onPickupCode", {}];
 
     private ["_intelFunctionName","_intelArgs","_objects"];
     _objects = synchronizedObjects _logic;
     if (_objects isEqualTo []) exitWith { true; };
     _intelFunctionName = "BAX_INTEL_fnc_giveIntelAce";
-    _intelArgs = [_intelTargetValue,_intelType,_content];
+    _intelArgs = [_intelTargetValue,_intelType,_content,_notify];
 
     if (isNull (configFile >> "CfgPatches" >> "ace_intelitems") and isNull (configFile >> "CfgPatches" >> "acex_intelitems")) exitWith {
         diag_log "[BAX] Intel: ace_intelitems and acex_intelitems are not loaded";
@@ -31,11 +33,11 @@ if (_activated) then {
 
     if (_useAceInteract) then {
         _objects apply { 
-            [_x,_actionName,_delete,1,_intelArgs] call BAX_INTEL_fnc_addIntelActionAce; 
+            [_x,_actionName,_delete,1,_onPickupCode,_intelArgs] call BAX_INTEL_fnc_addAceIntelAction; 
         };
     } else {
         _objects apply { 
-            [_x,_actionName,_delete,1,_intelArgs] call BAX_INTEL_fnc_addIntelAction; 
+            [_x,_actionName,_delete,1,_onPickupCode,_intelArgs] call BAX_INTEL_fnc_addIntelAction; 
         };
     };
 };
